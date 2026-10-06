@@ -1,0 +1,8 @@
+{
+  "name": "Generador de PGDI",
+  "description": "Generador de Plan de Gestión de Datos de Investigación (PGDI) - Universidad Centroamericana José Simeón Cañas / Micelio",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "rdmp-generator",
+  "version": "1.0.0",
+  "description": "Generador de Plan de Gestión de Datos de Investigación (PGDI)",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node -e \"console.log('Build completed')\""
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
