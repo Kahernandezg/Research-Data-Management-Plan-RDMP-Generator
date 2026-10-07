@@ -8,7 +8,7 @@ ObservableHQ: https://observablehq.com/user/@kevin-amilcar-hernandez-gutierrez
 Veasé: Hernández Gutierrez, K. A. (2024). Plan de Gestión de Datos de Investigación (PGDI): hacia una gestión científica más eficiente en la Universidad Centroamericana José Simeón Cañas. Biblios Journal of Librarianship and Information Science, (87), e003. https://doi.org/10.5195/biblios.2024.1232
 
 © Credits to: Kevin Gutierrez.
-Powered by: Claude.ai
+Powered by: Claude.ai/Google AI Studio
 -->
 
 <!doctype html>
@@ -22,34 +22,48 @@ Powered by: Claude.ai
     <meta property="og:description" content="Generador de Plan de Gestión de Datos de Investigación (PGDI) - Universidad Centroamericana José Simeón Cañas / Micelio" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <base target="_blank" />
   </head>
   <body>
     <div class="app">
       <div class="topbar">
         <div class="brand">
-          <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
-            <circle cx="19" cy="8" r="3.4" fill="#E8A93D" />
-            <circle cx="8" cy="24" r="3.4" fill="#2C5EA8" />
-            <circle cx="30" cy="24" r="3.4" fill="#2C5EA8" />
-            <circle cx="19" cy="33" r="2.6" fill="#14315C" />
-            <path
-              d="M19 11 L8 21 M19 11 L30 21 M8 27 L19 31 M30 27 L19 31 M8 24 L30 24"
-              stroke="#14315C"
-              stroke-width="1.4"
-              opacity="0.55"
-            />
+          <svg class="brand-logo-svg" width="46" height="46" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Logotipo Oficial Generador de PGDI UCA">
+            <defs>
+              <linearGradient id="pgdiGrad" x1="4" y1="4" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#14315C" />
+                <stop offset="100%" stop-color="#0A182F" />
+              </linearGradient>
+              <linearGradient id="pgdiAccentGrad" x1="18" y1="18" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#F59E0B" />
+                <stop offset="100%" stop-color="#D97706" />
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="48" height="48" rx="14" fill="url(#pgdiGrad)" stroke="#2C5EA8" stroke-width="1.4" />
+            <path d="M26 11L40 19V33L26 41L12 33V19L26 11Z" stroke="#38BDF8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4" />
+            <line x1="26" y1="11" x2="26" y2="26" stroke="#93C5FD" stroke-width="1.6" opacity="0.8" />
+            <line x1="12" y1="33" x2="26" y2="26" stroke="#93C5FD" stroke-width="1.6" opacity="0.8" />
+            <line x1="40" y1="33" x2="26" y2="26" stroke="#93C5FD" stroke-width="1.6" opacity="0.8" />
+            <line x1="12" y1="19" x2="40" y2="33" stroke="#38BDF8" stroke-width="1" stroke-dasharray="2 2" opacity="0.35" />
+            <line x1="40" y1="19" x2="12" y2="33" stroke="#38BDF8" stroke-width="1" stroke-dasharray="2 2" opacity="0.35" />
+            <circle cx="26" cy="11" r="3.2" fill="#FFFFFF" stroke="#14315C" stroke-width="1.5" />
+            <circle cx="40" cy="19" r="3.2" fill="#38BDF8" stroke="#FFFFFF" stroke-width="1.5" />
+            <circle cx="40" cy="33" r="3.2" fill="#FFFFFF" stroke="#14315C" stroke-width="1.5" />
+            <circle cx="26" cy="41" r="3.2" fill="#38BDF8" stroke="#FFFFFF" stroke-width="1.5" />
+            <circle cx="12" cy="33" r="3.2" fill="#FFFFFF" stroke="#14315C" stroke-width="1.5" />
+            <circle cx="12" cy="19" r="3.2" fill="#38BDF8" stroke="#FFFFFF" stroke-width="1.5" />
+            <circle cx="26" cy="26" r="6" fill="url(#pgdiAccentGrad)" stroke="#FFFFFF" stroke-width="1.8" />
+            <circle cx="26" cy="26" r="2.2" fill="#14315C" />
           </svg>
           <div class="brand-text">
-            <h1>Generador de PGDI</h1>
+            <div class="brand-title-row">
+              <h1>Generador de PGDI</h1>
+              <span class="brand-badge">: Micelio plataforma para la investigación UCA</span>
+            </div>
             <p>
               <strong>
-                Universidad Centroamericana José Simeón Cañas · Micelio,
-                Plataforma para la Investigación UCA
+                Universidad Centroamericana José Simeón Cañas · Vicerrectoría de Investigación e Innovación
               </strong>
-              — inspirado en la Guía para PGDI:
-              https://doi.org/10.5195/biblios.2024.1232 ;
-              https://doi.org/10.5281/zenodo.13840941
+              — Inspirado en la Guía para PGDI: (DOI: https://doi.org/10.5195/biblios.2024.1232 / https://zenodo.org/records/13840941)
             </p>
           </div>
         </div>
@@ -66,9 +80,49 @@ Powered by: Claude.ai
               alt="Vicerrectoría de Investigación e Innovación UCA"
             />
           </div>
-          <button class="btn btn-accent" onclick="generatePDF()">
-            ⬇ Descargar PDF
-          </button>
+          <div class="topbar-actions">
+            <div class="actions-group draft-actions">
+              <button class="btn btn-outline" onclick="exportStateJson()" title="Guardar borrador actual en archivo JSON para reanudar luego">
+              Guardar borrador
+              </button>
+              <button class="btn btn-outline" onclick="document.getElementById('importJsonInput').click()" title="Cargar borrador JSON previamente guardado">
+              Cargar borrador
+              </button>
+              <input type="file" id="importJsonInput" accept=".json" style="display:none" onchange="importStateJson(event)" />
+            </div>
+            <div class="actions-group repo-actions">
+              <a
+                href="https://repositorio.uca.edu.sv/handle/11674/6333"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-outline btn-resource"
+                title="Explorar Guía y Repositorio Institucional UCA (Handle: 11674/6333)"
+              >
+                <span class="resource-icon"></span> Repositorio UCA
+              </a>
+              <a
+                href="https://zenodo.org/communities/micelio-uca-edu-sv/records?q=&l=list&p=1&s=10&sort=newest"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-outline btn-resource"
+                title="Explorar planes de gestión de datos y datasets en Zenodo (Comunidad Micelio UCA)"
+              >
+                <span class="resource-icon"></span> Zenodo Micelio
+              </a>
+              <a
+                href="https://github.com/Kahernandezg/Research-Data-Management-Plan-RDMP-Generator"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="github-badge-btn"
+                title="Ver código fuente y repositorio en GitHub"
+              >
+                <img
+                  src="https://img.shields.io/badge/GitHub-Repositorio-181717?style=for-the-badge&logo=github&logoColor=white"
+                  alt="GitHub Repositorio"
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -146,9 +200,9 @@ Powered by: Claude.ai
           </strong>
           <p></p>
           Cite esta herramienta: Hernández Gutiérrez, K. A., Pacas, F. I.,
-          Gutierrez, O., & Vicerrectoría de Investigación e Innovación.
+          Gutierrez, O. (2026).
           <i>Generador de PGDI</i>
-          [Software].
+          [Software]. Vicerrectoría de Investigación e Innovación.
           <a
             href="https://codepen.io/editor/Kevin_Gutier09/pen/019f43a4-1ab0-78db-81f4-0746a4d5704d"
           >
