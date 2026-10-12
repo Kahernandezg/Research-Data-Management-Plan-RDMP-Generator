@@ -615,7 +615,6 @@ function renderPanel() {
       <div class="download-box-header">
         <span class="doc-badge">FORMATO OFICIAL VRII · MICELIO</span>
         <h3>Documento listo para generar</h3>
-        <p>Se creará un PDF normalizado con la identidad visual institucional de la Universidad Centroamericana José Simeón Cañas / Micelio, paginación continua íntegra sin cortes de texto y verificación de integridad.</p>
       </div>
       <div class="download-box-actions">
         <button class="btn btn-accent btn-lg" onclick="generatePDF()" title="Generar y descargar el Plan de Gestión de Datos de Investigación en formato PDF">
