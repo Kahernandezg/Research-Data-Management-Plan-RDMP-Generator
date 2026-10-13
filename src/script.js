@@ -1434,9 +1434,8 @@ function initWelcomeSplash() {
   const logoEl = document.getElementById("splashVriiLogo");
   const topbarVriiLogo = document.querySelector(".institutional-logos .logo-vrii");
   const appEl = document.querySelector(".app");
-  const progressBar = document.getElementById("splashProgressBar");
-  const statusText = document.getElementById("splashStatusText");
-  const skipBtn = document.getElementById("splashSkipBtn");
+  const enterBtn = document.getElementById("splashEnterBtn") || document.getElementById("splashSkipBtn");
+  const actionContainer = document.getElementById("splashActionContainer");
 
   if (!splashEl || !cardEl) return;
 
@@ -1445,7 +1444,7 @@ function initWelcomeSplash() {
     logoEl.src = topbarVriiLogo.src;
   }
 
-  // Preparar el contenedor principal de la aplicación para una transición suave
+  // Preparar el contenedor principal de la aplicación para una transición suave al ingresar
   if (appEl) {
     appEl.style.opacity = "0";
     appEl.style.transform = "translateY(8px)";
@@ -1498,21 +1497,21 @@ function initWelcomeSplash() {
     }
   }
 
-  // Botón para acceder directamente sin esperar
-  if (skipBtn) {
-    skipBtn.addEventListener("click", finishSplash);
+  // La interfaz se queda estática hasta que el usuario dé clic en el botón de entrar
+  if (enterBtn) {
+    enterBtn.addEventListener("click", finishSplash);
   }
 
-  // Tecla Escape o Enter para omitir
+  // Permitir también entrar presionando Enter
   const handleKeydown = (e) => {
-    if (!finished && (e.key === "Escape" || e.key === "Enter")) {
+    if (!finished && e.key === "Enter") {
       window.removeEventListener("keydown", handleKeydown);
       finishSplash();
     }
   };
   window.addEventListener("keydown", handleKeydown);
 
-  // Animación suave con GSAP
+  // Animación suave de entrada con GSAP (permanece estática al finalizar)
   if (window.gsap) {
     const gsap = window.gsap;
 
@@ -1522,12 +1521,11 @@ function initWelcomeSplash() {
     gsap.set(".splash-header-badge", { opacity: 0, y: -10 });
     gsap.set(".splash-divider-bar", { scaleX: 0, transformOrigin: "center" });
     gsap.set("#splashInfo", { opacity: 0, y: 15 });
-    gsap.set("#splashProgressContainer", { opacity: 0, y: 12 });
-    if (progressBar) gsap.set(progressBar, { width: "0%" });
+    if (actionContainer) gsap.set(actionContainer, { opacity: 0, y: 14, scale: 0.95 });
 
     activeTimeline = gsap.timeline({
-      defaults: { ease: "power3.out" },
-      onComplete: finishSplash
+      defaults: { ease: "power3.out" }
+      // NOTA: NO se autodescarta; permanece visible y estática hasta que el usuario hace clic
     });
 
     // 1. Entrada de la tarjeta contenedor con fade-in y escala suave
@@ -1569,32 +1567,16 @@ function initWelcomeSplash() {
       duration: 0.55
     }, "-=0.35");
 
-    activeTimeline.to("#splashProgressContainer", {
-      opacity: 1,
-      y: 0,
-      duration: 0.4
-    }, "-=0.25");
-
-    // 4. Progreso dinámico de inicio
-    if (progressBar) {
-      activeTimeline.to(progressBar, {
-        width: "100%",
-        duration: 1.4,
-        ease: "power1.inOut",
-        onUpdate: function () {
-          const p = this.progress();
-          if (p > 0.65 && statusText) {
-            statusText.textContent = "Preparando módulos del PGDI...";
-          }
-          if (p >= 0.95 && statusText) {
-            statusText.innerHTML = "<strong style='color:#14315C'>✓ Entorno listo</strong>";
-          }
-        }
-      }, "-=0.15");
+    // 4. Entrada destacada del botón de Entrar
+    if (actionContainer) {
+      activeTimeline.to(actionContainer, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        ease: "back.out(1.2)"
+      }, "-=0.25");
     }
-
-    // 5. Breve pausa para apreciación antes de la transición automática
-    activeTimeline.to({}, { duration: 0.35 });
 
   } else {
     // Modo de respaldo con transiciones CSS nativas si GSAP no estuviera disponible
@@ -1608,15 +1590,12 @@ function initWelcomeSplash() {
       logoEl.style.transform = "none";
     }
 
-    if (progressBar) {
-      progressBar.style.transition = "width 1.6s ease-in-out 0.4s";
-      setTimeout(() => {
-        progressBar.style.width = "100%";
-        if (statusText) statusText.textContent = "Preparando módulos del PGDI...";
-      }, 300);
+    if (actionContainer) {
+      actionContainer.style.transition = "opacity 0.8s ease 0.4s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s";
+      actionContainer.style.opacity = "1";
+      actionContainer.style.transform = "none";
     }
-
-    setTimeout(finishSplash, 2500);
+    // Tampoco se autodescarta; espera indefinidamente el clic del usuario
   }
 
   // Función global para permitir reproducir la animación en cualquier momento
