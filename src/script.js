@@ -1427,5 +1427,211 @@ function drawCCIcon(doc, x, y, r, muted) {
   doc.ellipse(x2, y + r * 0.42, r * 0.5, r * 0.32, "F");
 }
 
+/* ---------------------------- PANTALLA DE BIENVENIDA / TRANSICIÓN VRII ---------------------------- */
+function initWelcomeSplash() {
+  const splashEl = document.getElementById("welcomeSplash");
+  const cardEl = document.getElementById("splashCard");
+  const logoEl = document.getElementById("splashVriiLogo");
+  const topbarVriiLogo = document.querySelector(".institutional-logos .logo-vrii");
+  const appEl = document.querySelector(".app");
+  const progressBar = document.getElementById("splashProgressBar");
+  const statusText = document.getElementById("splashStatusText");
+  const skipBtn = document.getElementById("splashSkipBtn");
+
+  if (!splashEl || !cardEl) return;
+
+  // Sincronizar el logo oficial de la VRII desde los recursos institucionales cargados
+  if (topbarVriiLogo && logoEl) {
+    logoEl.src = topbarVriiLogo.src;
+  }
+
+  // Preparar el contenedor principal de la aplicación para una transición suave
+  if (appEl) {
+    appEl.style.opacity = "0";
+    appEl.style.transform = "translateY(8px)";
+    appEl.style.transition = "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)";
+  }
+
+  let finished = false;
+  let activeTimeline = null;
+
+  function finishSplash() {
+    if (finished) return;
+    finished = true;
+
+    if (activeTimeline) {
+      activeTimeline.kill();
+    }
+
+    if (window.gsap && cardEl) {
+      window.gsap.to(cardEl, {
+        opacity: 0,
+        y: -22,
+        scale: 1.03,
+        duration: 0.5,
+        ease: "power2.in"
+      });
+
+      window.gsap.to(splashEl, {
+        opacity: 0,
+        duration: 0.6,
+        delay: 0.08,
+        ease: "power2.inOut",
+        onComplete: () => {
+          splashEl.style.display = "none";
+          if (appEl) {
+            appEl.style.opacity = "1";
+            appEl.style.transform = "none";
+          }
+        }
+      });
+    } else {
+      splashEl.style.transition = "opacity 0.5s ease";
+      splashEl.style.opacity = "0";
+      setTimeout(() => {
+        splashEl.style.display = "none";
+        if (appEl) {
+          appEl.style.opacity = "1";
+          appEl.style.transform = "none";
+        }
+      }, 500);
+    }
+  }
+
+  // Botón para acceder directamente sin esperar
+  if (skipBtn) {
+    skipBtn.addEventListener("click", finishSplash);
+  }
+
+  // Tecla Escape o Enter para omitir
+  const handleKeydown = (e) => {
+    if (!finished && (e.key === "Escape" || e.key === "Enter")) {
+      window.removeEventListener("keydown", handleKeydown);
+      finishSplash();
+    }
+  };
+  window.addEventListener("keydown", handleKeydown);
+
+  // Animación suave con GSAP
+  if (window.gsap) {
+    const gsap = window.gsap;
+
+    // Configuración de estados iniciales
+    gsap.set(cardEl, { opacity: 0, scale: 0.88, y: 32 });
+    if (logoEl) gsap.set(logoEl, { opacity: 0, scale: 0.8, y: -20 });
+    gsap.set(".splash-header-badge", { opacity: 0, y: -10 });
+    gsap.set(".splash-divider-bar", { scaleX: 0, transformOrigin: "center" });
+    gsap.set("#splashInfo", { opacity: 0, y: 15 });
+    gsap.set("#splashProgressContainer", { opacity: 0, y: 12 });
+    if (progressBar) gsap.set(progressBar, { width: "0%" });
+
+    activeTimeline = gsap.timeline({
+      defaults: { ease: "power3.out" },
+      onComplete: finishSplash
+    });
+
+    // 1. Entrada de la tarjeta contenedor con fade-in y escala suave
+    activeTimeline.to(cardEl, {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.75,
+      ease: "power3.out"
+    });
+
+    // 2. Animación protagónica del logo VRII: fade-in, escala suave y deslizamiento
+    if (logoEl) {
+      activeTimeline.to(logoEl, {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.9,
+        ease: "back.out(1.4)"
+      }, "-=0.45");
+    }
+
+    // 3. Aparición escalonada de distintivos institucionales
+    activeTimeline.to(".splash-header-badge", {
+      opacity: 1,
+      y: 0,
+      duration: 0.45
+    }, "-=0.6");
+
+    activeTimeline.to(".splash-divider-bar", {
+      scaleX: 1,
+      duration: 0.5,
+      ease: "power2.out"
+    }, "-=0.4");
+
+    activeTimeline.to("#splashInfo", {
+      opacity: 1,
+      y: 0,
+      duration: 0.55
+    }, "-=0.35");
+
+    activeTimeline.to("#splashProgressContainer", {
+      opacity: 1,
+      y: 0,
+      duration: 0.4
+    }, "-=0.25");
+
+    // 4. Progreso dinámico de inicio
+    if (progressBar) {
+      activeTimeline.to(progressBar, {
+        width: "100%",
+        duration: 1.4,
+        ease: "power1.inOut",
+        onUpdate: function () {
+          const p = this.progress();
+          if (p > 0.65 && statusText) {
+            statusText.textContent = "Preparando módulos del PGDI...";
+          }
+          if (p >= 0.95 && statusText) {
+            statusText.innerHTML = "<strong style='color:#14315C'>✓ Entorno listo</strong>";
+          }
+        }
+      }, "-=0.15");
+    }
+
+    // 5. Breve pausa para apreciación antes de la transición automática
+    activeTimeline.to({}, { duration: 0.35 });
+
+  } else {
+    // Modo de respaldo con transiciones CSS nativas si GSAP no estuviera disponible
+    cardEl.style.transition = "opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)";
+    cardEl.style.opacity = "1";
+    cardEl.style.transform = "none";
+
+    if (logoEl) {
+      logoEl.style.transition = "opacity 0.8s ease 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s";
+      logoEl.style.opacity = "1";
+      logoEl.style.transform = "none";
+    }
+
+    if (progressBar) {
+      progressBar.style.transition = "width 1.6s ease-in-out 0.4s";
+      setTimeout(() => {
+        progressBar.style.width = "100%";
+        if (statusText) statusText.textContent = "Preparando módulos del PGDI...";
+      }, 300);
+    }
+
+    setTimeout(finishSplash, 2500);
+  }
+
+  // Función global para permitir reproducir la animación en cualquier momento
+  window.replayWelcomeSplash = function () {
+    splashEl.style.display = "flex";
+    splashEl.style.opacity = "1";
+    if (appEl) {
+      appEl.style.opacity = "0";
+      appEl.style.transform = "translateY(8px)";
+    }
+    initWelcomeSplash();
+  };
+}
+
 /* ---------------------------- INIT ---------------------------- */
 render();
+initWelcomeSplash();
+

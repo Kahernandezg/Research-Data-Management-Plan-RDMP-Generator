@@ -21,8 +21,65 @@ Powered by: Claude.ai/Google AI Studio
     <meta property="og:description" content="Generador de Plan de Gestión de Datos de Investigación (PGDI) - Universidad Centroamericana José Simeón Cañas / Micelio" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   </head>
   <body>
+    <!-- Pantalla de Bienvenida y Transición Institucional (VRII) -->
+    <div id="welcomeSplash" class="welcome-splash" role="dialog" aria-modal="true" aria-label="Bienvenida al Generador de PGDI · Vicerrectoría de Investigación e Innovación UCA">
+      <div class="splash-backdrop">
+        <div class="splash-glow splash-glow-top"></div>
+        <div class="splash-glow splash-glow-bottom"></div>
+        <div class="splash-grid-pattern"></div>
+      </div>
+
+      <div class="splash-card" id="splashCard">
+        <div class="splash-header-badge">
+          <span class="badge-pulse-dot"></span>
+          <span>Universidad Centroamericana José Simeón Cañas</span>
+        </div>
+
+        <div class="splash-logo-wrapper" id="splashLogoWrapper">
+          <div class="splash-logo-halo"></div>
+          <img
+            id="splashVriiLogo"
+            class="splash-vrii-logo"
+            alt="Vicerrectoría de Investigación e Innovación UCA"
+          />
+        </div>
+
+        <div class="splash-divider-bar"></div>
+
+        <div class="splash-info" id="splashInfo">
+          <h2 class="splash-title">Generador de Plan de Gestión de Datos de Investigación (PGDI)</h2>
+          <div class="splash-platform-pill">
+            <svg class="splash-icon-micelio" width="16" height="16" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="2" y="2" width="48" height="48" rx="14" fill="#14315C" stroke="#2C5EA8" stroke-width="2" />
+              <circle cx="26" cy="26" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1.8" />
+              <line x1="26" y1="11" x2="26" y2="26" stroke="#93C5FD" stroke-width="2" />
+              <line x1="12" y1="33" x2="26" y2="26" stroke="#93C5FD" stroke-width="2" />
+              <line x1="40" y1="33" x2="26" y2="26" stroke="#93C5FD" stroke-width="2" />
+              <circle cx="26" cy="11" r="3" fill="#FFFFFF" />
+              <circle cx="40" cy="33" r="3" fill="#38BDF8" />
+              <circle cx="12" cy="33" r="3" fill="#FFFFFF" />
+            </svg>
+            <span>Micelio · Plataforma para la Investigación UCA</span>
+          </div>
+        </div>
+
+        <div class="splash-progress-container" id="splashProgressContainer">
+          <div class="splash-progress-track">
+            <div id="splashProgressBar" class="splash-progress-bar"></div>
+          </div>
+          <div class="splash-meta-row">
+            <span id="splashStatusText" class="splash-status-text">Iniciando entorno de gestión científica...</span>
+            <button id="splashSkipBtn" class="splash-skip-btn" type="button" title="Omitir animación y acceder directamente">
+              Entrar <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="app">
       <div class="topbar">
         <div class="brand">
